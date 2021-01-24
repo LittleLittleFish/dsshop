@@ -2,35 +2,16 @@
   <div class="app-container">
     <div class="filter-container">
       <el-form :inline="true" :model="listQuery" class="demo-form-inline">
-        <el-form-item label="设备名称">
-          <el-input v-model="listQuery.name" placeholder="设备名称" clearable/>
-        </el-form-item>
-        <el-form-item label="设备品类">
-          <el-select v-model="listQuery.smart_device_category_id" placeholder="请选择类型" filterable clearable style="width:160px;">
-            <el-option
-              v-for="item in category"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"/>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="设备品牌">
-          <el-select v-model="listQuery.smart_device_brand_id" placeholder="请选择类型" filterable clearable style="width:160px;">
-            <el-option
-              v-for="ite in brand"
-              :key="ite.id"
-              :label="ite.name"
-              :value="ite.id"/>
-          </el-select>
+        <el-form-item label="快递公司">
+          <el-input v-model="listQuery.title" placeholder="快递公司" clearable @keyup.enter.native="handleFilter"/>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleFilter">搜索</el-button>
         </el-form-item>
       </el-form>
       <br>
-      <el-button v-permission="$store.jurisdiction.CreateDevice" class="filter-item" style="margin-left: 10px;float:right;" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
+      <el-button v-permission="$store.jurisdiction.CreateDhl" class="filter-item" style="margin-left: 10px;float:right;" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
     </div>
-
     <el-table
       v-loading="listLoading"
       ref="multipleTable"
@@ -46,113 +27,45 @@
         type="selection"
         width="55"
         fixed="left"/>
-      <el-table-column label="设备名称" align="center">
+      <el-table-column label="编号" fixed="left">
+        <template slot-scope="scope">
+          <span>{{ scope.row.id }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="快递公司" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="设备图标">
+      <el-table-column label="快递公司简称" align="center">
         <template slot-scope="scope">
-          <div class="drawing">
-            <img :src="scope.row.icon" style="width:45px;height:45px;">
-          </div>
+          <span>{{ scope.row.abbreviation }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="设备品类" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.smart_device_category.name }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="设备品牌" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.smart_device_brand.name }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="设备型号" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.model }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="设备状态" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.state_show }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="设备排序" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.sort }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="时间" align="center" prop="goods_sn">
+      <el-table-column label="时间" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.created_at }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" class-name="small-padding fixed-width" width="200" fixed="right">
+      <el-table-column label="操作" class-name="small-padding fixed-width" width="250" fixed="right">
         <template slot-scope="scope">
-          <el-button v-permission="$store.jurisdiction.UpdataDevice" type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
-          <el-button v-permission="$store.jurisdiction.DeleteDevice" type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button v-permission="$store.jurisdiction.EditDhl" type="warning" size="mini" style="width:80px" @click="handleUpdate(scope.row)">编辑</el-button>
+          <el-button v-permission="$store.jurisdiction.DeleteDhl" type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
-
     <!--分页-->
     <div class="pagination-operation">
-      <div class="operation">
-        <el-button size="mini" @click="handleCheckAllChange">全选/反选</el-button>
-        <el-button size="mini" type="danger" @click="handleAllDelete()">删除</el-button>
-      </div>
       <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" class="pagination" @pagination="getList"/>
     </div>
-
     <!--添加-->
-    <el-dialog :title="textMap[dialogStatus]" :close-on-click-modal="false" :visible.sync="dialogFormVisible">
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="设备名称" prop="name">
-          <el-input v-model="temp.name" maxlength="50" clearable/>
+        <el-form-item label="公司名称" prop="name">
+          <el-input v-model="temp.name" maxlength="30" clearable/>
         </el-form-item>
-        <el-form-item label="设备品类" prop="smart_device_category_id">
-          <el-select v-model="temp.smart_device_category_id" placeholder="请选择类型" filterable clearable style="width:160px;">
-            <el-option
-              v-for="item in category"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"/>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="设备品牌" prop="smart_device_brand_id">
-          <el-select v-model="temp.smart_device_brand_id" placeholder="请选择类型" filterable clearable style="width:160px;">
-            <el-option
-              v-for="ite in brand"
-              :key="ite.id"
-              :label="ite.name"
-              :value="ite.id"/>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="设备型号" prop="model">
-          <el-input v-model="temp.model" maxlength="60" clearable/>
-        </el-form-item>
-        <el-form-item label="设备图标" prop="icon">
-          <el-input v-model="temp.icon" maxlength="255" clearable style="padding-bottom: 10px;"/>
-          <el-upload
-            :show-file-list="false"
-            :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload"
-            :on-progress="handleProgress"
-            :action="actionurl"
-            :headers="imgHeaders"
-            :data="imgData"
-            class="avatar-uploader">
-            <span v-if="imgProgress">
-              <el-progress :percentage="imgProgressPercent" type="circle" class="progress-img"/>
-            </span>
-            <span v-else>
-              <img v-if="temp.icon" :src="temp.icon" class="avatar">
-              <i v-else class="el-icon-plus avatar-uploader-icon"/>
-            </span>
-            <div slot="tip" class="el-upload__tip">可直接复制网络图片地址，也可上传</div>
-            <div slot="tip" class="el-upload__tip">只能上传jpg/png/gif文件，且不超过500kb</div>
-          </el-upload>
+        <el-form-item label="简称" prop="abbreviation">
+          <el-input v-model="temp.abbreviation" maxlength="80" clearable/>
         </el-form-item>
         <el-form-item label="是否显示" prop="state">
           <el-radio-group v-model="temp.state">
@@ -200,7 +113,6 @@
     float:left;
     margin-left: 10px;
   }
-
   .avatar-uploader .el-upload {
     border: 1px dashed #d9d9d9;
     border-radius: 6px;
@@ -230,18 +142,17 @@
 </style>
 
 <script>
-import { getList, setDelete, createSubmit, updateSubmit } from '@/api/device'
+import { getList, setDelete, createSubmit, updateSubmit } from '@/api/dhl'
 import { getToken } from '@/utils/auth'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
-
 export default {
-  name: 'ProjectList',
+  name: 'VueTemplateList',
   components: { Pagination },
   data() {
     return {
       actionurl: process.env.BASE_API + 'uploadPictures',
       imgHeaders: {
-        Authorization: getToken('token_type') + ' ' + getToken('access_token')
+        Authorization: 'Bearer ' + getToken('access_token')
       },
       dialogVisible: false,
       ruleForm: [],
@@ -249,8 +160,6 @@ export default {
       tableKey: 0,
       list: null,
       total: 0,
-      brand: null,
-      category: null,
       textMap: {
         update: '修改',
         create: '添加'
@@ -274,19 +183,10 @@ export default {
       temp: {},
       rules: {
         name: [
-          { required: true, message: '请输入设备名称', trigger: 'blur' }
+          { required: true, message: '请输入公司名称', trigger: 'blur' }
         ],
-        smart_device_category_id: [
-          { required: true, message: '请选择设备品类', trigger: 'change' }
-        ],
-        smart_device_brand_id: [
-          { required: true, message: '请选择设备品牌', trigger: 'change' }
-        ],
-        model: [
-          { required: true, message: '请输入设备型号', trigger: 'blur' }
-        ],
-        icon: [
-          { required: true, message: '请添加设备图标', trigger: 'change' }
+        abbreviation: [
+          { required: true, message: '请输入简称', trigger: 'blur' }
         ],
         state: [
           { required: true, message: '请选择状态', trigger: 'change' }
@@ -304,18 +204,14 @@ export default {
     getList() {
       this.listLoading = true
       getList(this.listQuery).then(response => {
-        this.list = response.data.paginate.data
-        this.category = response.data.category
-        this.brand = response.data.brand
-        this.total = response.data.paginate.total
+        this.list = response.data.data
+        this.total = response.data.total
         this.listLoading = false
       })
     },
     handleFilter() {
-      this.listQuery.page = 1
       this.getList()
     },
-
     sortChange(data) {
       const { prop, order } = data
       if (prop === 'id') {
@@ -340,7 +236,8 @@ export default {
       this.temp = {
         state: 0,
         sort: '5',
-        img: ''
+        name: '',
+        abbreviation: ''
       }
     },
     handleCreate() {
@@ -453,7 +350,6 @@ export default {
     // 图片格式大小验证
     beforeAvatarUpload(file) {
       const isLt2M = file.size / 1024 < 500
-
       if (
         ['image/jpeg',
           'image/gif',
