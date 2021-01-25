@@ -2,8 +2,8 @@
 
 namespace App\Console;
 
-use App\Console\Commands\couponExpireDispose;
-use App\Console\Commands\couponStartDispose;
+use App\Console\Commands\CouponExpireDispose;
+use App\Console\Commands\CouponStartDispose;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -15,8 +15,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        couponStartDispose::class,
-        couponExpireDispose::class
+        CouponStartDispose::class,
+        CouponExpireDispose::class
     ];
 
     /**
