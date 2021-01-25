@@ -115,18 +115,6 @@ Route::prefix('v1')->namespace('v1')->group(function () {
     });
     // 插件后台
     Route::prefix('admin')->namespace('Plugin')->middleware(['auth:api'])->group(function () {
-        //优惠券_s
-        Route::get('coupon', 'CouponController@index')->middleware(['permissions:CouponList']);    //优惠券列表
-        Route::post('coupon', 'CouponController@store')->middleware(['permissions:CreateCoupon']);    //优惠券添加保存
-        Route::put('coupon/{photo}', 'CouponController@update')->middleware(['permissions:EditCoupon']);    //优惠券操作
-        Route::delete('coupon/{photo}', 'CouponController@destroy')->middleware(['permissions:DeleteCoupon']);    //优惠券删除
-        //优惠券_e
-        //评价_s
-        Route::get('comment', 'CommentController@index')->middleware(['permissions:CommentList']);    //评价列表
-        Route::post('comment', 'CommentController@reply')->middleware(['permissions:CreateComment']);    //评价回复
-        Route::put('comment/{photo}', 'CommentController@update')->middleware(['permissions:EditComment']);    //评价操作
-        Route::delete('comment/{photo}', 'CommentController@destroy')->middleware(['permissions:DeleteComment']);    //评价删除
-        //评价_e
         //栏目文章_s
         Route::get('column', 'ColumnController@index')->middleware(['permissions:ColumnList']);    //栏目列表
         Route::get('column/{photo}', 'ColumnController@show')->middleware(['permissions:CreateColumn']);    //栏目详情
@@ -139,6 +127,18 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         Route::put('article/{photo}', 'ArticleController@update')->middleware(['permissions:EditArticle']);    //文章编辑保存
         Route::delete('article/{photo}', 'ArticleController@destroy')->middleware(['permissions:DeleteArticle']);    //文章删除
         //栏目文章_e
+        //评价_s
+        Route::get('comment', 'CommentController@index')->middleware(['permissions:CommentList']);    //评价列表
+        Route::post('comment', 'CommentController@reply')->middleware(['permissions:CreateComment']);    //评价回复
+        Route::put('comment/{photo}', 'CommentController@update')->middleware(['permissions:EditComment']);    //评价操作
+        Route::delete('comment/{photo}', 'CommentController@destroy')->middleware(['permissions:DeleteComment']);    //评价删除
+        //评价_e
+        //优惠券_s
+        Route::get('coupon', 'CouponController@index')->middleware(['permissions:CouponList']);    //优惠券列表
+        Route::post('coupon', 'CouponController@store')->middleware(['permissions:CreateCoupon']);    //优惠券添加保存
+        Route::put('coupon/{photo}', 'CouponController@update')->middleware(['permissions:EditCoupon']);    //优惠券操作
+        Route::delete('coupon/{photo}', 'CouponController@destroy')->middleware(['permissions:DeleteCoupon']);    //优惠券删除
+        //优惠券_e
         //分销_s
         Route::get('distribution', 'DistributionController@index')->middleware(['permissions:DistributionList']);    //分销列表
         Route::post('distribution', 'DistributionController@store')->middleware(['permissions:CreateDistribution']);    //分销添加
@@ -213,22 +213,23 @@ Route::prefix('v1')->namespace('v1')->group(function () {
     });
     // 插件前台
     Route::prefix('app')->namespace('Plugin')->middleware(['appverify','auth:web'])->group(function () {
+        //评价_s
+         Route::get('comment', 'CommentController@index');    //列表
+        Route::get('comment/{photo}', 'CommentController@show');    //详情
+        Route::get('goodIndentCommodity/{photo}', 'CommentController@goodIndentCommodity');    //获取需要评价的商品列表
+        Route::post('comment/{photo}', 'CommentController@store');    //添加保存
+        Route::post('commentDelete/{photo}', 'CommentController@destroy');    //删除
+        //评价_e
         //优惠券_s
          Route::get('coupon', 'CouponWebController@index');    //优惠券列表
         Route::get('userCouponCount', 'UserCouponController@count');    //我的优惠券数量
         Route::get('userCoupon', 'UserCouponController@index');    //我的优惠券列表
         Route::post('userCoupon', 'UserCouponController@store');    //领取优惠券
         //优惠券_e
-        //评价_s
-        Route::get('comment', 'CommentController@index');    //列表
-        Route::get('comment/{photo}', 'CommentController@show');    //详情
-        Route::get('goodIndentCommodity/{photo}', 'CommentController@goodIndentCommodity');    //获取需要评价的商品列表
-        Route::post('comment/{photo}', 'CommentController@store');    //添加保存
-        Route::post('commentDelete/{photo}', 'CommentController@destroy');    //删除
-        //评价_e
         //APP验证插件列表
     });
     Route::prefix('app')->namespace('Plugin')->middleware(['appverify'])->group(function () {
+        Route::get('goodEvaluate', 'CommentController@goodEvaluate');    //获取商品评价列表
         //栏目文章_s
         Route::get('column', 'ColumnController@appIndex');    //栏目列表
         Route::get('column/{photo}', 'ColumnController@appShow');    //栏目详情
@@ -238,9 +239,8 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         Route::post('article/{photo}', 'ArticleController@pv');    //增加文章访问量
         //栏目文章_e
         //评价_s
-        Route::get('comment', 'CommentController@index');    //列表
-        //评价_e
         Route::get('goodEvaluate', 'CommentController@goodEvaluate');    //获取商品评价列表
+        //评价_e
         //APP无需验证插件列表
     });
 });

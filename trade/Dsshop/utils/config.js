@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === "development") {
 		lbsQq: '',
 		DomainName: domainName,
 		BaseURL: domainName +INTERFACE,	//api_URL
-		secret: 'base64:szoJ3mSx/5U7zOsJfU7s4pSahiwdh01x6badmz5FtCM='
+		secret: 'base64:nX1V453b/MhIRPkWvWenRe4RvmropvI4pcq2+Luj/bU='
 	}
 	applyDsshopNodeEnv = 'dev'
 } else {
@@ -22,7 +22,7 @@ if (process.env.NODE_ENV === "development") {
 			lbsQq: '',
 			DomainName: domainName,
 			BaseURL: domainName +INTERFACE,
-			secret: 'base64:szoJ3mSx/5U7zOsJfU7s4pSahiwdh01x6badmz5FtCM='
+			secret: 'base64:nX1V453b/MhIRPkWvWenRe4RvmropvI4pcq2+Luj/bU='
 		}
 		applyDsshopNodeEnv = 'test'
 	}else{
@@ -32,7 +32,7 @@ if (process.env.NODE_ENV === "development") {
 			lbsQq: '',
 			DomainName: domainName,
 			BaseURL: domainName +INTERFACE,
-			secret: 'base64:szoJ3mSx/5U7zOsJfU7s4pSahiwdh01x6badmz5FtCM='
+			secret: 'base64:nX1V453b/MhIRPkWvWenRe4RvmropvI4pcq2+Luj/bU='
 		}
 		applyDsshopNodeEnv = 'prod'
 	}

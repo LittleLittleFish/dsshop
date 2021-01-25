@@ -4517,16 +4517,16 @@
         },
         {
             "name": "spatie/db-dumper",
-            "version": "2.18.0",
+            "version": "2.19.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/db-dumper.git",
-                "reference": "eddb2b7c6877817d97bbdc1c60d1a800bf5a267a"
+                "reference": "2215d803d40b0d3d4494e6de51ec6765bf47a32d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/db-dumper/zipball/eddb2b7c6877817d97bbdc1c60d1a800bf5a267a",
-                "reference": "eddb2b7c6877817d97bbdc1c60d1a800bf5a267a",
+                "url": "https://api.github.com/repos/spatie/db-dumper/zipball/2215d803d40b0d3d4494e6de51ec6765bf47a32d",
+                "reference": "2215d803d40b0d3d4494e6de51ec6765bf47a32d",
                 "shasum": ""
             },
             "require": {
@@ -4565,7 +4565,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/db-dumper/issues",
-                "source": "https://github.com/spatie/db-dumper/tree/2.18.0"
+                "source": "https://github.com/spatie/db-dumper/tree/2.19.0"
             },
             "funding": [
                 {
@@ -4573,7 +4573,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-11-10T09:20:18+00:00"
+            "time": "2021-01-25T08:24:04+00:00"
         },
         {
             "name": "spatie/laravel-backup",
@@ -7673,16 +7673,16 @@
         },
         {
             "name": "filp/whoops",
-            "version": "2.9.1",
+            "version": "2.9.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filp/whoops.git",
-                "reference": "307fb34a5ab697461ec4c9db865b20ff2fd40771"
+                "reference": "df7933820090489623ce0be5e85c7e693638e536"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filp/whoops/zipball/307fb34a5ab697461ec4c9db865b20ff2fd40771",
-                "reference": "307fb34a5ab697461ec4c9db865b20ff2fd40771",
+                "url": "https://api.github.com/repos/filp/whoops/zipball/df7933820090489623ce0be5e85c7e693638e536",
+                "reference": "df7933820090489623ce0be5e85c7e693638e536",
                 "shasum": ""
             },
             "require": {
@@ -7732,9 +7732,15 @@
             ],
             "support": {
                 "issues": "https://github.com/filp/whoops/issues",
-                "source": "https://github.com/filp/whoops/tree/2.9.1"
+                "source": "https://github.com/filp/whoops/tree/2.9.2"
             },
-            "time": "2020-11-01T12:00:00+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/denis-sokolov",
+                    "type": "github"
+                }
+            ],
+            "time": "2021-01-24T12:00:00+00:00"
         },
         {
             "name": "hamcrest/hamcrest-php",

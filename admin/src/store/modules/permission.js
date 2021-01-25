@@ -48,14 +48,6 @@ export const componentsMap = {
   StatisticsVisit: () => import('@/views/statistics/visit'),
   StatisticsAgeAndSex: () => import('@/views/statistics/user'),
   StatisticsPay: () => import('@/views/statistics/pay'),
-  // 优惠券_s
-  Coupon: () => import('@/views/tool/Coupon/index'),
-  CouponList: () => import('@/views/tool/Coupon/list'),
-  // 优惠券_e
-  // 评价_s
-  Comment: () => import('@/views/tool/Comment/index'),
-  CommentList: () => import('@/views/tool/Comment/list'),
-  // 评价_e
   // 栏目文章_s
   Column: () => import('@/views/tool/Article/Column/index'),
   ColumnList: () => import('@/views/tool/Article/Column/list'),
@@ -66,6 +58,14 @@ export const componentsMap = {
   CreateArticle: () => import('@/views/tool/Article/Article/create'),
   EditArticle: () => import('@/views/tool/Article/Article/edit'),
   // 栏目文章_e
+  // 评价_s
+  Comment: () => import('@/views/tool/Comment/index'),
+  CommentList: () => import('@/views/tool/Comment/list'),
+  // 评价_e
+  // 优惠券_s
+  Coupon: () => import('@/views/tool/Coupon/index'),
+  CouponList: () => import('@/views/tool/Coupon/list'),
+  // 优惠券_e
   // 分销_s
   Distribution: () => import('@/views/tool/Distribution/index'),
   DistributionList: () => import('@/views/tool/Distribution/list'),

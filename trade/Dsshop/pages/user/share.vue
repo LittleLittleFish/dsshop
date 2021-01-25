@@ -179,6 +179,8 @@
 		.img{
 			margin-top:40upx;
 			text-align: center;
+			display: flex;
+			justify-content: center;
 			image{
 				width: 80%;
 			}

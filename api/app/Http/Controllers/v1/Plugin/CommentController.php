@@ -7,7 +7,6 @@ use App\Models\v1\Comment;
 use App\Models\v1\GoodIndent;
 use App\Models\v1\GoodIndentCommodity;
 use App\Models\v1\Resource;
-use App\Notifications\Common;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -73,10 +72,6 @@ class CommentController extends Controller
                 if(!$data['details']){
                     return ['评价内容不能为空',Code::CODE_PARAMETER_WRONG];
                 }
-                $count=Comment::where('model_id',$data['id'])->where('model_type','App\Models\v1\GoodIndentCommodity')->count();
-                if($count){
-                    return ['您已评价过该商品，无法重复提交',Code::CODE_MISUSE];
-                }
                 $Comment->user_id = auth('web')->user()->id;
                 $Comment->model_id= $data['id'];
                 $Comment->score= $data['score'];
@@ -99,19 +94,8 @@ class CommentController extends Controller
                 $GoodIndent=GoodIndent::find($id);
                 $GoodIndent->state = GoodIndent::GOOD_INDENT_STATE_ACCOMPLISH;
                 $GoodIndent->save();
-                $Common=(new Common)->adminOrderEvaluate([
-                    'id'=>$Comment->id,  //评价ID
-                    'cellphone'=>auth('web')->user()->cellphone,  //评价人手机号
-                    'details'=>$Comment->details,  //评价内容
-                    'time'=>$Comment->created_at,  //评价时间
-                    'template'=>'admin_order_evaluate',   //通知模板标识
-                ]);
-                if($Common['result']== 'ok'){
-                    return array(1,'评价成功');
-                }else{
-                    return array($Common['msg'],Code::CODE_PARAMETER_WRONG);
-                }
             }
+            return array(1);
         }, 5);
         if($return[0] == 1){
             return resReturn(1,'添加成功');
