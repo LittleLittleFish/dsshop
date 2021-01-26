@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\AutomaticDelivery;
 use App\Console\Commands\CouponExpireDispose;
 use App\Console\Commands\CouponStartDispose;
 use Illuminate\Console\Scheduling\Schedule;
@@ -16,7 +17,8 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         CouponStartDispose::class,
-        CouponExpireDispose::class
+        CouponExpireDispose::class,
+        AutomaticDelivery::class
     ];
 
     /**
@@ -42,6 +44,10 @@ class Kernel extends ConsoleKernel
                 $schedule->command('backup:run')->dailyAt(config('backup.time'));
             }
         }
+
+        //以下任务调试可直接删除
+        //自动发货
+        $schedule->command('automatic:delivery')->everyMinute();
     }
 
     /**
