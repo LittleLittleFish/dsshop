@@ -188,7 +188,6 @@
 			getQuantity(){
 				const that = this
 				Indents.getQuantity(function(res){
-					console.log('getQuantity',res)
 					that.quantity = res
 				})
 			},

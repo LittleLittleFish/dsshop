@@ -239,7 +239,7 @@
 			//顶部tab点击
 			tabClick(index){
 				this.tabCurrentIndex = index
-				// this.loadData('tabChange')
+				this.loadData('tabChange')
 				this.page = 1
 			},
 			//删除订单
