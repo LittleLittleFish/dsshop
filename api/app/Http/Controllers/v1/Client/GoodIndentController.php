@@ -321,6 +321,7 @@ class GoodIndentController extends Controller
             'obligation' => 0, //待付款
             'waitdeliver' => 0, //待发货
             'waitforreceiving' => 0, //待收货
+            'remainEvaluated ' => 0, //待评价
         ];
         if ($GoodIndent) {
             foreach ($GoodIndent as $indent) {
@@ -332,6 +333,8 @@ class GoodIndentController extends Controller
                         $return['waitdeliver'] += 1;
                     } else if ($indent->state == GoodIndent::GOOD_INDENT_STATE_TAKE) {
                         $return['waitforreceiving'] += 1;
+                    } else if ($indent->state == GoodIndent::GOOD_INDENT_STATE_EVALUATE) {
+                        $return['remainEvaluated'] += 1;
                     }
                 }
             }

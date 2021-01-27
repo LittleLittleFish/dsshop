@@ -67,7 +67,7 @@
 					<text>待收货</text>
 				</view>
 				<view class="order-item" @click="navTo('/pages/order/order?state=4')" hover-class="common-hover"  :hover-stay-time="50">
-					<text class="cuIcon-edit"></text>
+					<text class="yticon icon-yishouhuo"><text v-if="quantity.remainEvaluated" class="cu-tag badge">{{quantity.remainEvaluated}}</text></text>
 					<text>待评价</text>
 				</view>
 				<!-- <view class="order-item" @click="navTo('/pages/order/order?state=7')" hover-class="common-hover"  :hover-stay-time="50">
