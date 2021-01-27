@@ -89,34 +89,34 @@ class GoodIndentController extends Controller
                 $GoodIndent->identification = orderNumber();
 
                 $GoodIndent->remark = $request->remark;
-                $couponMoney=0;
-                if($request->user_coupon_id){   //使用了优惠券
-                    $UserCoupon=UserCoupon::with(['Coupon'])->find($request->user_coupon_id);
-                    if($UserCoupon){
-                        switch ($UserCoupon->Coupon->type){
+                $couponMoney = 0;
+                if ($request->user_coupon_id) {   //使用了优惠券
+                    $UserCoupon = UserCoupon::with(['Coupon'])->find($request->user_coupon_id);
+                    if ($UserCoupon) {
+                        switch ($UserCoupon->Coupon->type) {
                             case Coupon::COUPON_TYPE_FULL_REDUCTION:
                             case Coupon::COUPON_TYPE_RANDOM:
-                                $couponMoney = $UserCoupon->Coupon->cost/100;
+                                $couponMoney = $UserCoupon->Coupon->cost / 100;
                                 break;
                             case Coupon::COUPON_TYPE_DISCOUNT:  //折扣：商品总额*优惠券折扣/100
-                                $couponMoney = $total* ($UserCoupon->Coupon->cost/10000);
+                                $couponMoney = $total * ($UserCoupon->Coupon->cost / 10000);
                                 break;
                         }
                         $UserCoupon->state = UserCoupon::USER_COUPON_STATE_USED;
                         $UserCoupon->save();
                     }
-                    $GoodIndent->coupon_money=$couponMoney;
+                    $GoodIndent->coupon_money = $couponMoney;
                 }
                 $GoodIndent->total = $total + $request->carriage - $couponMoney;
                 $GoodIndent->save();
-                if($request->user_coupon_id){
-                    $GoodIndentUserCoupon=new GoodIndentUserCoupon();
+                if ($request->user_coupon_id) {
+                    $GoodIndentUserCoupon = new GoodIndentUserCoupon();
                     $GoodIndentUserCoupon->good_indent_id = $GoodIndent->id;
                     $GoodIndentUserCoupon->user_coupon_id = $request->user_coupon_id;
                     $GoodIndentUserCoupon->save();
                 }
-                foreach ($request->indentCommodity as $id=>$indentCommodity){
-                    $GoodIndentCommodity=new GoodIndentCommodity();
+                foreach ($request->indentCommodity as $id => $indentCommodity) {
+                    $GoodIndentCommodity = new GoodIndentCommodity();
                     $GoodIndentCommodity->good_indent_id = $GoodIndent->id;
                     $GoodIndentCommodity->good_id = $indentCommodity['good_id'];
                     $GoodIndentCommodity->good_sku_id = $indentCommodity['good_sku_id'];
@@ -136,7 +136,7 @@ class GoodIndentController extends Controller
                 $GoodLocation->longitude = $request->address['longitude'];
                 $GoodLocation->house = $request->address['house'];
                 $GoodLocation->save();
-                return array(1,$GoodIndent->id);
+                return array(1, $GoodIndent->id);
             }, 5);
             RedisLock::unlock($redis, 'goodIndent');
             if ($return[0] == 1) {
@@ -201,7 +201,7 @@ class GoodIndentController extends Controller
     // 取消订单
     public function cancel($id)
     {
-        $GoodIndent=GoodIndent::with(['goodsList','GoodIndentUser'])->find($id);
+        $GoodIndent = GoodIndent::with(['goodsList', 'GoodIndentUser'])->find($id);
         $GoodIndent->state = GoodIndent::GOOD_INDENT_STATE_CANCEL;
         $GoodIndent->save();
         //库存处理
@@ -219,10 +219,10 @@ class GoodIndentController extends Controller
             }
         }
         //优惠券退还
-        if($GoodIndent->GoodIndentUser){
-            UserCoupon::where('id',$GoodIndent->GoodIndentUser->user_coupon_id)->update(['state'=>UserCoupon::USER_COUPON_STATE_UNUSED]);
+        if ($GoodIndent->GoodIndentUser) {
+            UserCoupon::where('id', $GoodIndent->GoodIndentUser->user_coupon_id)->update(['state' => UserCoupon::USER_COUPON_STATE_UNUSED]);
         }
-        return resReturn(1,'成功');
+        return resReturn(1, '成功');
     }
 
     /**
@@ -251,9 +251,10 @@ class GoodIndentController extends Controller
      * @param $id
      * @return string
      */
-    public function receipt($id){
-        $return=DB::transaction(function ()use($id){
-            $GoodIndent=GoodIndent::with(['goodsList'])->find($id);
+    public function receipt($id)
+    {
+        $return = DB::transaction(function () use ($id) {
+            $GoodIndent = GoodIndent::with(['goodsList'])->find($id);
             $GoodIndent->state = GoodIndent::GOOD_INDENT_STATE_EVALUATE;
             $GoodIndent->confirm_time = Carbon::now()->toDateTimeString();
             $GoodIndent->save();
@@ -275,21 +276,21 @@ class GoodIndentController extends Controller
                     'confirm_time' => $GoodIndent->confirm_time,    //确认收货时间
                     'template' => 'admin_order_completion',   //通知模板标识
                 ]);
-                if($AdminCommon['result']== 'ok'){
-                    $Common=(new Common)->orderEvaluate([
-                        'id'=>$GoodIndent->id,  //订单ID
-                        'identification'=>$GoodIndent->identification,  //订单号
-                        'confirm_time'=>$GoodIndent->confirm_time,    //确认收货时间
-                        'template'=>'order_evaluate',   //通知模板标识
-                        'user_id'=>$GoodIndent->User->id    //用户ID
+                if ($AdminCommon['result'] == 'ok') {
+                    $Common = (new Common)->orderEvaluate([
+                        'id' => $GoodIndent->id,  //订单ID
+                        'identification' => $GoodIndent->identification,  //订单号
+                        'confirm_time' => $GoodIndent->confirm_time,    //确认收货时间
+                        'template' => 'order_evaluate',   //通知模板标识
+                        'user_id' => $GoodIndent->User->id    //用户ID
                     ]);
-                    if($AdminCommon['result']== 'ok'){
-                        return array(1,'收货成功');
-                    }else{
-                        return array($Common['msg'],Code::CODE_PARAMETER_WRONG);
+                    if ($AdminCommon['result'] == 'ok') {
+                        return array(1, '收货成功');
+                    } else {
+                        return array($Common['msg'], Code::CODE_PARAMETER_WRONG);
                     }
-                }else{
-                    return array($AdminCommon['msg'],Code::CODE_PARAMETER_WRONG);
+                } else {
+                    return array($AdminCommon['msg'], Code::CODE_PARAMETER_WRONG);
                 }
             } else {
                 return array($Common['msg'], Code::CODE_PARAMETER_WRONG);
@@ -321,7 +322,7 @@ class GoodIndentController extends Controller
             'obligation' => 0, //待付款
             'waitdeliver' => 0, //待发货
             'waitforreceiving' => 0, //待收货
-            'remainEvaluated ' => 0, //待评价
+            'remainEvaluated' => 0, //待评价
         ];
         if ($GoodIndent) {
             foreach ($GoodIndent as $indent) {
